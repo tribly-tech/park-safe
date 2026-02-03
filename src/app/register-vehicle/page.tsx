@@ -40,7 +40,7 @@ const vehicleSchema = z.object({
   vehicleModel: z.string().trim().min(1, 'Vehicle model is required'),
   vehicleColor: z.string().trim().min(1, 'Vehicle color is required'),
   vehicleType: z.enum(['car', 'bike', 'auto', 'other'], {
-    required_error: 'Vehicle type is required',
+    message: 'Vehicle type is required',
   }),
 
   // Owner Details
@@ -67,7 +67,7 @@ const vehicleSchema = z.object({
     .trim()
     .min(1, 'Emergency mobile number is required')
     .regex(/^[6-9]\d{9}$/, 'Invalid Indian mobile number (10 digits, starting with 6-9)'),
-  whatsappEnabled: z.boolean().default(true),
+  whatsappEnabled: z.boolean(),
 
   // Consent
   consent: z.boolean().refine((val) => val === true, {
