@@ -39,9 +39,7 @@ const vehicleSchema = z.object({
   vehicleBrand: z.string().trim().min(1, 'Vehicle brand is required'),
   vehicleModel: z.string().trim().min(1, 'Vehicle model is required'),
   vehicleColor: z.string().trim().min(1, 'Vehicle color is required'),
-  vehicleType: z.enum(['car', 'bike', 'auto', 'other'], {
-    message: 'Vehicle type is required',
-  }),
+  vehicleType: z.enum(['car', 'bike', 'auto', 'other'], 'Vehicle type is required'),
 
   // Owner Details
   ownerName: z
