@@ -839,8 +839,8 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Floating Scan QR Button - desktop only (hidden on mobile) */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 hidden md:flex backdrop-blur-[5px] bg-gradient-to-t from-white/80 via-white/60 to-white/40 h-[110px] w-full max-w-[440px] items-start justify-center pt-4 z-50 border-t border-white/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
+      {/* Floating Scan QR Button - hidden on all viewports */}
+      <div className="hidden fixed bottom-0 left-1/2 -translate-x-1/2 backdrop-blur-[5px] bg-gradient-to-t from-white/80 via-white/60 to-white/40 h-[110px] w-full max-w-[440px] items-start justify-center pt-4 z-50 border-t border-white/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
         <button
           onClick={handleOpenScanner}
           className="bg-white border-[#1bb658] border-[0.75px] flex gap-3 h-[54px] items-center justify-center px-[18px] py-3 rounded-[74.25px] shadow-[0px_3px_0px_0px_#1bb658] hover:shadow-[0px_5px_0px_0px_#1bb658] hover:-translate-y-0.5 active:shadow-[0px_2px_0px_0px_#1bb658] active:translate-y-0.5 transition-all duration-200"
