@@ -196,7 +196,7 @@ export default function Home() {
     <div className="relative min-h-screen w-full bg-gradient-to-b from-white via-[#f8fffb] to-[#f1fff7]">
       {/* Navigation Bar - sticky, glass/blur, glossy */}
       <header className="sticky top-0 z-50 w-full shrink-0 bg-white/50 backdrop-blur-md supports-[backdrop-filter]:bg-white/40">
-        <div className="mx-auto flex w-full max-w-[440px] md:max-w-2xl lg:max-w-4xl items-center justify-center overflow-clip p-3 md:p-4">
+        <div className="mx-auto flex w-full max-w-[330px] md:max-w-2xl lg:max-w-4xl items-center justify-center overflow-clip p-3 md:p-4">
           <div className="w-full bg-white/70 backdrop-blur-2xl border border-[#1bb658]/40 flex flex-1 items-center justify-between min-h-px min-w-px overflow-clip px-4 md:px-5 py-3 md:py-3.5 rounded-[99px] shadow-[0px_4px_0px_0px_rgba(27,182,88,0.4),inset_0_1px_0_0_rgba(255,255,255,0.8)] ring-1 ring-white/60">
             <Link href="/" className="flex items-center justify-center px-2 md:px-4">
               <p className="font-medium text-[28px] md:text-[36px] lg:text-[40px] text-[#1bb658] tracking-[-0.8px] leading-[1.2]">
@@ -839,8 +839,8 @@ export default function Home() {
         </div>
       </footer>
 
-      {/* Floating Scan QR Button - mobile only */}
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 md:hidden backdrop-blur-[5px] bg-gradient-to-t from-white/80 via-white/60 to-white/40 h-[110px] w-full max-w-[440px] flex items-start justify-center pt-4 z-50 border-t border-white/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
+      {/* Floating Scan QR Button - desktop only (hidden on mobile) */}
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 hidden md:flex backdrop-blur-[5px] bg-gradient-to-t from-white/80 via-white/60 to-white/40 h-[110px] w-full max-w-[440px] items-start justify-center pt-4 z-50 border-t border-white/30 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] pb-safe">
         <button
           onClick={handleOpenScanner}
           className="bg-white border-[#1bb658] border-[0.75px] flex gap-3 h-[54px] items-center justify-center px-[18px] py-3 rounded-[74.25px] shadow-[0px_3px_0px_0px_#1bb658] hover:shadow-[0px_5px_0px_0px_#1bb658] hover:-translate-y-0.5 active:shadow-[0px_2px_0px_0px_#1bb658] active:translate-y-0.5 transition-all duration-200"
