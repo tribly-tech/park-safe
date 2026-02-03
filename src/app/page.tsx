@@ -193,7 +193,7 @@ export default function Home() {
   }
 
   return (
-    <div className="relative min-h-screen w-full bg-white">
+    <div className="relative min-h-screen w-full bg-gradient-to-b from-white via-[#f8fffb] to-[#f1fff7]">
       {/* Navigation Bar - sticky, glass/blur, glossy */}
       <header className="sticky top-0 z-50 w-full shrink-0 bg-white/50 backdrop-blur-md supports-[backdrop-filter]:bg-white/40">
         <div className="mx-auto flex w-full max-w-[440px] md:max-w-2xl lg:max-w-4xl items-center justify-center overflow-clip p-3 md:p-4">
@@ -245,7 +245,7 @@ export default function Home() {
         </div>
 
         {/* Hero – problem statement first, then solution (engaging, objective: communicate the problem) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-stretch w-full">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 xl:gap-16 items-stretch w-full bg-gradient-to-b from-white to-[#f1fff7] rounded-2xl md:rounded-3xl px-6 py-8 md:px-8 md:py-10 lg:px-10 lg:py-12">
           {/* Left: Problem statement – lead with the pain, then payoff */}
           <div className="lg:col-span-5 flex flex-col gap-4 lg:gap-5 order-2 lg:order-1 lg:justify-center">
             <span className="inline-block text-[11px] font-bold uppercase tracking-[0.25em] text-[#64748b]">
@@ -501,12 +501,12 @@ export default function Home() {
               <div className="relative aspect-[4/3] lg:aspect-[3/2] rounded-2xl overflow-hidden bg-white ring-1 ring-[#e2e8f0]">
                 <Image src={commonSituationImages[0].src} alt={commonSituationImages[0].alt} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" unoptimized />
               </div>
-              <div className="flex flex-col justify-center lg:py-4">
-                <span className="text-[12px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">01</span>
-                <h3 className="font-bold text-[20px] md:text-[22px] text-black tracking-[-0.02em] leading-tight mb-2">
+              <div className="flex flex-col justify-center lg:py-4 gap-0">
+                <span className="text-[14px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">01</span>
+                <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Car blocking your driveway?
                 </h3>
-                <p className="font-normal text-[15px] text-[#64748b] leading-[1.6]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Reach the owner instantly without confrontation.
                 </p>
               </div>
@@ -514,12 +514,12 @@ export default function Home() {
 
             {/* Row 2: Content left, image right */}
             <article className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center lg:min-h-[240px]">
-              <div className="flex flex-col justify-center lg:py-4 order-2 lg:order-1">
-                <span className="text-[12px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">02</span>
-                <h3 className="font-bold text-[20px] md:text-[22px] text-black tracking-[-0.02em] leading-tight mb-2">
+              <div className="flex flex-col justify-center lg:py-4 order-2 lg:order-1 gap-0">
+                <span className="text-[14px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">02</span>
+                <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Double-parked vehicle?
                 </h3>
-                <p className="font-normal text-[15px] text-[#64748b] leading-[1.6]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Send a quick message to resolve it peacefully.
                 </p>
               </div>
@@ -533,12 +533,12 @@ export default function Home() {
               <div className="relative aspect-[4/3] lg:aspect-[3/2] rounded-2xl overflow-hidden bg-white ring-1 ring-[#e2e8f0]">
                 <Image src={commonSituationImages[2].src} alt={commonSituationImages[2].alt} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 50vw" unoptimized />
               </div>
-              <div className="flex flex-col justify-center lg:py-4">
-                <span className="text-[12px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">03</span>
-                <h3 className="font-bold text-[20px] md:text-[22px] text-black tracking-[-0.02em] leading-tight mb-2">
+              <div className="flex flex-col justify-center lg:py-4 gap-0">
+                <span className="text-[14px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">03</span>
+                <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Headlights left on?
                 </h3>
-                <p className="font-normal text-[15px] text-[#64748b] leading-[1.6]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Help a stranger avoid a dead battery.
                 </p>
               </div>
@@ -546,12 +546,12 @@ export default function Home() {
 
             {/* Row 4: Content left, image right */}
             <article className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-center lg:min-h-[240px]">
-              <div className="flex flex-col justify-center lg:py-4 order-2 lg:order-1">
-                <span className="text-[12px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">04</span>
-                <h3 className="font-bold text-[20px] md:text-[22px] text-black tracking-[-0.02em] leading-tight mb-2">
+              <div className="flex flex-col justify-center lg:py-4 order-2 lg:order-1 gap-0">
+                <span className="text-[14px] font-semibold text-[#1bb658] uppercase tracking-wider mb-2">04</span>
+                <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Reserved spot taken?
                 </h3>
-                <p className="font-normal text-[15px] text-[#64748b] leading-[1.6]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Reach the owner and resolve it without confrontation.
                 </p>
               </div>
