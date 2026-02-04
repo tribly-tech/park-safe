@@ -29,7 +29,6 @@ export const API_ROUTES = {
 
 // Storage keys
 export const STORAGE_KEYS = {
-  THEME: 'theme',
   USER: 'user',
   TOKEN: 'token',
   PROFILE: 'park_safe_profile',

@@ -22,186 +22,195 @@ export default function QRScanner({
   const [error, setError] = useState<string | null>(null)
   const scannerRef = useRef<Html5Qrcode | null>(null)
   const isRunningRef = useRef(false)
+  const initTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+  const hasScannedRef = useRef(false)
+  const isOpenRef = useRef(isOpen)
+  isOpenRef.current = isOpen
 
   const cleanupScanner = useCallback(async () => {
-    if (scannerRef.current) {
+    const scanner = scannerRef.current
+    if (!scanner) {
+      isRunningRef.current = false
+      return
+    }
+
+    try {
+      // Always try stop() when we have a scanner instance (handles SCANNING and edge cases)
       try {
-        // Check if scanner is actually running before stopping
-        const state = scannerRef.current.getState()
-        if (state === 2) { // 2 = SCANNING state in Html5Qrcode
-          // Stop the scanner first - this stops the video stream
-          try {
-            await scannerRef.current.stop()
-          } catch (stopErr: any) {
-            // Suppress stop errors - video might already be stopped
-            if (!stopErr?.message?.includes('already stopped')) {
-              console.debug('Stop error (ignored):', stopErr)
-            }
-          }
-          
-          // Stop any video elements directly
-          const qrReaderElement = document.getElementById('qr-reader')
-          if (qrReaderElement) {
-            const videoElements = qrReaderElement.querySelectorAll('video')
-            videoElements.forEach((video) => {
-              try {
-                video.pause()
-                video.srcObject = null
-                video.load()
-              } catch (e) {
-                // Ignore errors when stopping video
-              }
-            })
-          }
-          
-          // Small delay to ensure video stream is fully stopped
-          await new Promise(resolve => setTimeout(resolve, 200))
+        await scanner.stop()
+      } catch (stopErr: unknown) {
+        const msg = (stopErr as Error)?.message ?? ''
+        if (!msg.includes('already stopped') && !msg.includes('Not started')) {
+          console.debug('Scanner stop (ignored):', stopErr)
         }
-        
-        // Clear the scanner
-        try {
-          scannerRef.current.clear()
-        } catch (clearErr) {
-          // Ignore clear errors
-          console.debug('Clear error (ignored):', clearErr)
-        }
-      } catch (err: any) {
-        // Suppress play() interruption errors - these are expected when closing
-        if (err?.name !== 'AbortError' && !err?.message?.includes('play() request was interrupted')) {
-          console.debug('Scanner cleanup:', err)
-        }
-      } finally {
-        scannerRef.current = null
-        isRunningRef.current = false
       }
+
+      // Stop any video tracks so camera is released
+      const qrReaderElement = document.getElementById('qr-reader')
+      if (qrReaderElement) {
+        qrReaderElement.querySelectorAll('video').forEach((video) => {
+          try {
+            const stream = video.srcObject as MediaStream | null
+            stream?.getTracks?.()?.forEach((track) => track.stop())
+            video.pause()
+            video.srcObject = null
+            video.load()
+          } catch {
+            // ignore
+          }
+        })
+      }
+
+      await new Promise((r) => setTimeout(r, 150))
+
+      try {
+        scanner.clear()
+      } catch {
+        // ignore
+      }
+    } catch (err: unknown) {
+      const e = err as Error
+      if (e?.name !== 'AbortError' && !e?.message?.includes('play() request was interrupted')) {
+        console.debug('Scanner cleanup:', err)
+      }
+    } finally {
+      scannerRef.current = null
+      isRunningRef.current = false
     }
   }, [])
 
   const initializeScanner = useCallback(async () => {
+    if (scannerRef.current) return
+    hasScannedRef.current = false
+
     try {
       setError(null)
       setIsScanning(true)
 
-      // Wait for DOM element to be available
-      const checkElement = () => {
-        return new Promise<void>((resolve, reject) => {
-          let attempts = 0
-          const maxAttempts = 20 // 2 seconds max wait
-          
-          const interval = setInterval(() => {
-            const element = document.getElementById('qr-reader')
-            if (element) {
-              clearInterval(interval)
-              resolve()
-            } else if (attempts >= maxAttempts) {
-              clearInterval(interval)
-              reject(new Error('HTML Element with id=qr-reader not found'))
-            }
-            attempts++
-          }, 100)
-        })
-      }
+      // Wait for Dialog portal to mount – give DOM time to have #qr-reader
+      await new Promise<void>((resolve, reject) => {
+        let attempts = 0
+        const maxAttempts = 50 // 5 seconds
+        const check = () => {
+          if (!isOpenRef.current) {
+            reject(new Error('Dialog closed during init'))
+            return
+          }
+          const el = document.getElementById('qr-reader')
+          if (el) {
+            resolve()
+            return
+          }
+          attempts++
+          if (attempts >= maxAttempts) {
+            reject(new Error('Scanner container not found. Please try again.'))
+            return
+          }
+          setTimeout(check, 100)
+        }
+        setTimeout(check, 300) // Initial delay so Dialog content is mounted
+      })
 
-      await checkElement()
-      
+      if (!isOpenRef.current || scannerRef.current) return
+
       const html5QrCode = new Html5Qrcode('qr-reader')
       scannerRef.current = html5QrCode
 
-      // Request camera permissions and start scanning
       await html5QrCode.start(
-        { facingMode: 'environment' }, // Use back camera on mobile
+        { facingMode: 'environment' },
         {
-          fps: 10, // Frames per second for scanning
-          qrbox: { width: 250, height: 250 }, // Scanning area
+          fps: 10,
+          qrbox: { width: 250, height: 250 },
           aspectRatio: 1.0,
         },
-        (decodedText) => {
-          // Success callback - immediately call onScanSuccess and close
+        (decodedText: string) => {
+          if (hasScannedRef.current) return
+          hasScannedRef.current = true
           setIsScanning(false)
-          
-          // Stop scanning
+
           html5QrCode
             .stop()
             .then(() => {
               isRunningRef.current = false
+              scannerRef.current = null
               onScanSuccess(decodedText)
             })
-            .catch((err) => {
-              console.error('Error stopping scanner:', err)
+            .catch(() => {
               isRunningRef.current = false
+              scannerRef.current = null
               onScanSuccess(decodedText)
             })
         },
         () => {
-          // Error callback - called frequently for scanning errors
-          // Intentionally empty to avoid console spam
+          // Per-frame error callback – no-op to avoid spam
         }
       )
-      
-      // Only set to running after start() succeeds
+
       isRunningRef.current = true
-    } catch (err: any) {
-      console.error('Scanner initialization error:', err)
+    } catch (err: unknown) {
+      const e = err as Error
+      console.error('QR Scanner init:', e)
       let errorMsg = 'Failed to start camera. Please check permissions.'
-      
-      if (err.name === 'NotAllowedError') {
+
+      if (e?.name === 'NotAllowedError') {
         errorMsg = 'Camera permission denied. Please allow camera access.'
-      } else if (err.name === 'NotFoundError') {
+      } else if (e?.name === 'NotFoundError') {
         errorMsg = 'No camera found on this device.'
-      } else if (err.name === 'NotReadableError') {
-        errorMsg = 'Camera is already in use by another application.'
-      } else if (err.message && err.message.includes('qr-reader not found')) {
-        errorMsg = 'Scanner failed to load. Please try again.'
+      } else if (e?.name === 'NotReadableError') {
+        errorMsg = 'Camera is in use by another app.'
+      } else if (e?.message?.includes('not found') || e?.message?.includes('Dialog closed')) {
+        errorMsg = 'Scanner could not start. Please try again.'
       }
-      
+
       setError(errorMsg)
       setIsScanning(false)
+      scannerRef.current = null
       isRunningRef.current = false
-      
-      if (onScanError) {
-        onScanError(errorMsg)
-      }
+      onScanError?.(errorMsg)
     }
-  }, [onScanSuccess, onScanError])
+  }, [onScanSuccess, onScanError, isOpen])
 
   useEffect(() => {
-    // Suppress play() interruption errors globally for this component
     const handleUnhandledRejection = (event: PromiseRejectionEvent) => {
-      const reason = event.reason
+      const reason = event.reason as Error | undefined
       if (
         reason?.name === 'AbortError' ||
         reason?.message?.includes('play() request was interrupted') ||
-        reason?.message?.includes('media was removed from the document') ||
-        reason?.message?.includes('The play() request was interrupted')
+        reason?.message?.includes('media was removed from the document')
       ) {
         event.preventDefault()
-        // Silently handle - this is expected when closing scanner
       }
     }
-
     window.addEventListener('unhandledrejection', handleUnhandledRejection)
 
-    if (isOpen && !isRunningRef.current) {
-      // Reset state when opening
+    if (isOpen) {
       setError(null)
-      setIsScanning(false)
-      initializeScanner()
-    }
-
-    if (!isOpen && isRunningRef.current) {
-      // Cleanup when dialog closes
-      cleanupScanner().catch(() => {
-        // Ignore cleanup errors
-      })
+      if (initTimeoutRef.current) {
+        clearTimeout(initTimeoutRef.current)
+        initTimeoutRef.current = null
+      }
+      if (!isRunningRef.current && !scannerRef.current) {
+        initTimeoutRef.current = setTimeout(() => {
+          initTimeoutRef.current = null
+          if (isOpen && !scannerRef.current) initializeScanner()
+        }, 100)
+      }
+    } else {
+      if (initTimeoutRef.current) {
+        clearTimeout(initTimeoutRef.current)
+        initTimeoutRef.current = null
+      }
+      cleanupScanner().catch(() => {})
     }
 
     return () => {
       window.removeEventListener('unhandledrejection', handleUnhandledRejection)
-      // Cleanup on unmount
+      if (initTimeoutRef.current) {
+        clearTimeout(initTimeoutRef.current)
+        initTimeoutRef.current = null
+      }
       if (scannerRef.current) {
-        cleanupScanner().catch(() => {
-          // Ignore errors during unmount cleanup
-        })
+        cleanupScanner().catch(() => {})
       }
     }
   }, [isOpen, initializeScanner, cleanupScanner])
@@ -226,12 +235,12 @@ export default function QRScanner({
     onClose()
   }
 
-  const handleRetry = () => {
+  const handleRetry = async () => {
     setError(null)
-    cleanupScanner()
+    await cleanupScanner()
     setTimeout(() => {
-      initializeScanner()
-    }, 100)
+      if (isOpenRef.current && !scannerRef.current) initializeScanner()
+    }, 200)
   }
 
   return (

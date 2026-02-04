@@ -31,6 +31,7 @@ import {
   DialogTitle,
   DialogDescription,
 } from '@/components/ui/dialog'
+import QRScanner from '@/components/QRScanner'
 
 export default function ProfilePage() {
   const router = useRouter()
@@ -41,6 +42,7 @@ export default function ProfilePage() {
   const [profile] = useLocalStorage<ProfileData | null>(STORAGE_KEYS.PROFILE, null)
   const [vehicle] = useLocalStorage<VehicleData | null>(STORAGE_KEYS.VEHICLE, null)
   const [isRegisterQRModalOpen, setIsRegisterQRModalOpen] = useState(false)
+  const [isScannerOpen, setIsScannerOpen] = useState(false)
   const [mounted, setMounted] = useState(false)
   useEffect(() => {
     setMounted(true)
@@ -87,6 +89,30 @@ export default function ProfilePage() {
 
   const handlePolicies = () => {
     router.push(ROUTES.PRIVACY)
+  }
+
+  const handleScanSuccess = (decodedText: string) => {
+    setIsScannerOpen(false)
+    try {
+      const url = new URL(decodedText)
+      window.location.href = url.href
+    } catch {
+      if (decodedText.startsWith('/')) {
+        window.location.href = decodedText
+      } else {
+        toast.info('QR Code Scanned', {
+          description: decodedText,
+          duration: 5000,
+        })
+      }
+    }
+  }
+
+  const handleScanError = (error: string) => {
+    toast.error('Scanning Failed', {
+      description: error,
+      duration: 5000,
+    })
   }
 
   return (
@@ -377,7 +403,7 @@ export default function ProfilePage() {
               type="button"
               onClick={() => {
                 setIsRegisterQRModalOpen(false)
-                router.push(ROUTES.REGISTER_VEHICLE)
+                setIsScannerOpen(true)
               }}
               className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left group w-full"
             >
@@ -405,6 +431,13 @@ export default function ProfilePage() {
           </div>
         </DialogContent>
       </Dialog>
+
+      <QRScanner
+        isOpen={isScannerOpen}
+        onClose={() => setIsScannerOpen(false)}
+        onScanSuccess={handleScanSuccess}
+        onScanError={handleScanError}
+      />
     </div>
   )
 }

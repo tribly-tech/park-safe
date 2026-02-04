@@ -48,12 +48,6 @@ export const useIsTablet = () =>
 export const useIsDesktop = () => useMediaQuery('(min-width: 1024px)')
 
 /**
- * Hook to detect if the device prefers dark mode
- */
-export const usePrefersDarkMode = () =>
-  useMediaQuery('(prefers-color-scheme: dark)')
-
-/**
  * Hook to detect if the device prefers reduced motion
  */
 export const usePrefersReducedMotion = () =>
