@@ -1,15 +1,16 @@
 'use client'
 
-import { useState, useRef, useEffect, KeyboardEvent, ClipboardEvent } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { useRouter } from 'next/navigation'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
-import { Check, ArrowLeft, Car, User, Phone, Shield, ShieldCheck } from 'lucide-react'
+import { Check, Car, User, Phone, Shield, ShieldCheck } from 'lucide-react'
 import Link from 'next/link'
 import { ROUTES, STORAGE_KEYS } from '@/lib/constants'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
+import { OTPVerification } from '@/components/OTPVerification'
 import {
   Select,
   SelectContent,
@@ -87,12 +88,6 @@ export default function RegisterVehiclePage() {
   const [resendCooldown, setResendCooldown] = useState(0)
   const [isVerifying, setIsVerifying] = useState(false)
 
-  const otpInputRefs = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-  ]
   const resendIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
 
   useEffect(() => {
@@ -132,43 +127,6 @@ export default function RegisterVehiclePage() {
     setOwnerMobile(data.ownerMobile)
     setIsLoading(false)
     setStep('otp')
-
-    // Auto-focus first OTP input
-    setTimeout(() => otpInputRefs[0].current?.focus(), 100)
-  }
-
-  const handleOtpChange = (index: number, value: string) => {
-    if (value.length > 1) value = value.slice(-1)
-    if (!/^\d*$/.test(value)) return
-
-    const newOtp = [...otp]
-    newOtp[index] = value
-    setOtp(newOtp)
-    setOtpError('')
-
-    if (value && index < 3) otpInputRefs[index + 1].current?.focus()
-    if (value && index === 3 && newOtp.every((d) => d !== '')) handleVerifyOTP(newOtp)
-  }
-
-  const handleOtpKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      otpInputRefs[index - 1].current?.focus()
-    }
-  }
-
-  const handleOtpPaste = (e: ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const digits = e.clipboardData.getData('text/plain').replace(/\D/g, '').slice(0, 4).split('')
-    if (digits.length > 0) {
-      const newOtp = [digits[0] ?? '', digits[1] ?? '', digits[2] ?? '', digits[3] ?? '']
-      setOtp(newOtp)
-      setOtpError('')
-      const focusIndex = Math.min(digits.length, 3)
-      otpInputRefs[focusIndex].current?.focus()
-      if (digits.length === 4) {
-        setTimeout(() => handleVerifyOTP(newOtp), 100)
-      }
-    }
   }
 
   const handleVerifyOTP = async (otpToVerify: string[] = otp) => {
@@ -211,7 +169,6 @@ export default function RegisterVehiclePage() {
     setOtp(['', '', '', ''])
     setOtpError('')
     setResendCooldown(60)
-    otpInputRefs[0].current?.focus()
 
     resendIntervalRef.current = setInterval(() => {
       setResendCooldown((prev) => {
@@ -256,84 +213,19 @@ export default function RegisterVehiclePage() {
             </svg>
           </Link>
         </div>
-
-        <div className="flex flex-col items-center justify-center min-h-screen px-6 py-20 animate-in fade-in duration-500">
-          {/* Branding */}
-          <div className="w-full max-w-[340px] mb-10">
-            <p className="font-medium text-[28px] text-[#1bb658] tracking-[-0.56px] leading-[1.2] mb-2">
-              park safe
-            </p>
-            <div className="bg-gradient-to-r from-[#1bb658] to-transparent h-[2px] w-20" />
-          </div>
-
-          <div className="w-full max-w-[340px] flex flex-col">
-            <h1 className="font-bold text-[28px] text-black tracking-[-0.56px] leading-[1.2] mb-2">
-              Verify OTP
-            </h1>
-            <p className="font-normal text-[15px] text-[#64748b] leading-[1.5] mb-1">
-              OTP sent to +91 {ownerMobile}
-            </p>
-            <button
-              onClick={handleBackToForm}
-              className="text-[14px] text-[#1bb658] hover:text-[#16a34a] font-medium transition-colors mb-10 text-left w-fit"
-            >
-              Change number
-            </button>
-
-            {/* OTP Input */}
-            <div className="w-full mb-6">
-              <div className="flex gap-3 justify-center mb-3">
-                {otp.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={otpInputRefs[index]}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(index, e.target.value)}
-                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                    onPaste={index === 0 ? handleOtpPaste : undefined}
-                    className="size-[64px] text-center text-[24px] font-bold border-2 border-[#e5e7eb] focus:outline-none focus:border-[#1bb658] rounded-[12px] bg-white text-[#111827] transition-colors"
-                  />
-                ))}
-              </div>
-              {otpError && (
-                <p className="text-center text-[13px] text-[#e61d1c] font-medium">{otpError}</p>
-              )}
-            </div>
-
-            {/* Verify Button */}
-            <button
-              onClick={() => handleVerifyOTP()}
-              disabled={isLoading || isVerifying || otp.some((d) => d === '')}
-              className="w-full h-[54px] bg-[#1bb658] text-white font-semibold text-[16px] rounded-[99px] hover:bg-[#16a34a] active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed mb-6"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Verifying...
-                </span>
-              ) : (
-                'Verify OTP'
-              )}
-            </button>
-
-            {/* Resend OTP */}
-            <div className="text-center">
-              <button
-                onClick={handleResendOTP}
-                disabled={resendCooldown > 0}
-                className="text-[14px] text-[#6b7280] hover:text-[#1bb658] font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:text-[#6b7280]"
-              >
-                Didn&apos;t receive?{' '}
-                <span className="text-[#1bb658] font-semibold">
-                  {resendCooldown > 0 ? `Resend in ${resendCooldown}s` : 'Resend'}
-                </span>
-              </button>
-            </div>
-          </div>
-        </div>
+        <OTPVerification
+          mobile={ownerMobile}
+          otp={otp}
+          onOtpChange={setOtp}
+          onVerify={handleVerifyOTP}
+          onResend={handleResendOTP}
+          onBack={handleBackToForm}
+          otpError={otpError}
+          isLoading={isLoading}
+          isVerifying={isVerifying}
+          resendCooldown={resendCooldown}
+          backLabel="Change number"
+        />
       </div>
     )
   }

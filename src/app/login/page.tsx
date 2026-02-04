@@ -1,9 +1,11 @@
 'use client'
 
-import { useState, useRef, KeyboardEvent, ClipboardEvent } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { ArrowLeft, Shield } from 'lucide-react'
 import Link from 'next/link'
 import { ROUTES, STORAGE_KEYS } from '@/lib/constants'
+import { sanitizeIndianPhone, getIndianPhoneError, isValidIndianPhone } from '@/lib/phone-utils'
+import { OTPVerification } from '@/components/OTPVerification'
 
 type LoginStep = 'phone' | 'otp'
 
@@ -12,124 +14,94 @@ export default function LoginPage() {
   const [phoneNumber, setPhoneNumber] = useState('')
   const [otp, setOtp] = useState(['', '', '', ''])
   const [isLoading, setIsLoading] = useState(false)
-  const [error, setError] = useState('')
-  
-  // Refs for OTP inputs
-  const otpInputRefs = [
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-    useRef<HTMLInputElement>(null),
-  ]
+  const [isVerifying, setIsVerifying] = useState(false)
+  const [resendCooldown, setResendCooldown] = useState(0)
+  const [phoneError, setPhoneError] = useState('')
+  const [otpError, setOtpError] = useState('')
+
+  const resendIntervalRef = useRef<ReturnType<typeof setInterval> | null>(null)
+
+  useEffect(() => {
+    return () => {
+      if (resendIntervalRef.current) clearInterval(resendIntervalRef.current)
+    }
+  }, [])
 
   const handlePhoneChange = (value: string) => {
-    // Only allow numbers and limit to 10 digits
-    const cleaned = value.replace(/\D/g, '').slice(0, 10)
-    setPhoneNumber(cleaned)
-    setError('')
+    setPhoneNumber(sanitizeIndianPhone(value))
+    setPhoneError('')
   }
 
   const handleSendOTP = async () => {
-    if (phoneNumber.length !== 10) {
-      setError('Please enter a valid 10-digit phone number')
+    const error = getIndianPhoneError(phoneNumber)
+    if (error) {
+      setPhoneError(error)
       return
     }
 
     setIsLoading(true)
-    setError('')
+    setPhoneError('')
 
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false)
       setStep('otp')
-      // Auto-focus first OTP input
-      setTimeout(() => otpInputRefs[0].current?.focus(), 100)
     }, 1500)
   }
 
-  const handleOtpChange = (index: number, value: string) => {
-    // Only allow single digit
-    if (value.length > 1) {
-      value = value.slice(-1)
-    }
-
-    if (!/^\d*$/.test(value)) {
-      return // Only allow numbers
-    }
-
-    const newOtp = [...otp]
-    newOtp[index] = value
-    setOtp(newOtp)
-    setError('')
-
-    // Auto-focus next input
-    if (value && index < 3) {
-      otpInputRefs[index + 1].current?.focus()
-    }
-
-    // Auto-submit when all digits are entered
-    if (value && index === 3 && newOtp.every(digit => digit !== '')) {
-      handleVerifyOTP(newOtp)
-    }
-  }
-
-  const handleOtpKeyDown = (index: number, e: KeyboardEvent<HTMLInputElement>) => {
-    // Handle backspace
-    if (e.key === 'Backspace' && !otp[index] && index > 0) {
-      otpInputRefs[index - 1].current?.focus()
-    }
-  }
-
-  const handleOtpPaste = (e: ClipboardEvent<HTMLInputElement>) => {
-    e.preventDefault()
-    const pastedData = e.clipboardData.getData('text/plain').trim()
-    const digits = pastedData.replace(/\D/g, '').slice(0, 4).split('')
-    
-    if (digits.length === 4) {
-      setOtp(digits)
-      otpInputRefs[3].current?.focus()
-      // Auto-submit after paste
-      setTimeout(() => handleVerifyOTP(digits), 100)
-    }
-  }
-
   const handleVerifyOTP = async (otpToVerify: string[] = otp) => {
-    if (otpToVerify.some(digit => digit === '')) {
-      setError('Please enter all 4 digits')
+    if (otpToVerify.some((d) => d === '')) {
+      setOtpError('Please enter all 4 digits')
       return
     }
+    if (isVerifying) return
 
+    setIsVerifying(true)
     setIsLoading(true)
-    setError('')
+    setOtpError('')
 
     // Simulate API call
     setTimeout(() => {
       setIsLoading(false)
-      
-      // Save login state to localStorage
+      setIsVerifying(false)
       if (typeof window !== 'undefined') {
         window.localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(true))
       }
-      
-      // Redirect to home page and open drawer
       window.location.href = `${ROUTES.HOME}?drawer=open&loggedIn=true`
     }, 1500)
   }
 
   const handleResendOTP = () => {
+    if (resendCooldown > 0) return
+    if (resendIntervalRef.current) clearInterval(resendIntervalRef.current)
+
     setOtp(['', '', '', ''])
-    setError('')
-    otpInputRefs[0].current?.focus()
-    // Simulate resend
-    setTimeout(() => {
-      // Show toast or success message
-    }, 500)
+    setOtpError('')
+    setResendCooldown(60)
+
+    resendIntervalRef.current = setInterval(() => {
+      setResendCooldown((prev) => {
+        if (prev <= 1) {
+          if (resendIntervalRef.current) {
+            clearInterval(resendIntervalRef.current)
+            resendIntervalRef.current = null
+          }
+          return 0
+        }
+        return prev - 1
+      })
+    }, 1000)
   }
 
   const handleBackToPhone = () => {
+    if (resendIntervalRef.current) {
+      clearInterval(resendIntervalRef.current)
+      resendIntervalRef.current = null
+    }
     setStep('phone')
     setOtp(['', '', '', ''])
-    setError('')
+    setOtpError('')
+    setResendCooldown(0)
   }
 
   return (
@@ -156,7 +128,7 @@ export default function LoginPage() {
               Enter your phone number to continue
             </p>
 
-            {/* Phone Input */}
+            {/* Phone Input – matches contact-owner verify page */}
             <div className="w-full mb-6">
               <label className="block font-medium text-[13px] text-[#64748b] mb-2">
                 Phone Number
@@ -171,23 +143,21 @@ export default function LoginPage() {
                   value={phoneNumber}
                   onChange={(e) => handlePhoneChange(e.target.value)}
                   placeholder="0000000000"
-                  className="w-full h-[54px] pl-14 pr-4 bg-white border-2 border-[#e5e7eb] rounded font-medium text-[16px] text-[#111827] placeholder:text-[#cbd5e1] focus:outline-none focus:border-[#1bb658] transition-all duration-200"
+                  className="w-full h-[54px] pl-14 pr-4 bg-white border-2 border-[#e5e7eb] rounded-[12px] font-medium text-[16px] text-[#111827] placeholder:text-[#cbd5e1] focus:outline-none focus:border-[#1bb658] transition-all duration-200"
                   maxLength={10}
                   autoFocus
                 />
               </div>
-              {error && (
-                <p className="mt-2 text-[13px] text-[#dc2626] font-medium">
-                  {error}
-                </p>
+              {phoneError && (
+                <p className="mt-2 text-[13px] text-[#e61d1c] font-medium">{phoneError}</p>
               )}
             </div>
 
             {/* Send OTP Button */}
             <button
               onClick={handleSendOTP}
-              disabled={isLoading || phoneNumber.length !== 10}
-              className="w-full h-[54px] bg-[#1bb658] text-white font-semibold text-[16px] rounded hover:bg-[#16a34a] active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#1bb658]"
+              disabled={isLoading || !isValidIndianPhone(phoneNumber)}
+              className="w-full h-[54px] bg-[#1bb658] text-white font-semibold text-[16px] rounded-[99px] hover:bg-[#16a34a] active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed"
             >
               {isLoading ? (
                 <span className="flex items-center justify-center gap-2">
@@ -200,72 +170,19 @@ export default function LoginPage() {
             </button>
           </div>
         ) : (
-          <div className="w-full max-w-[340px] flex flex-col animate-in fade-in duration-500">
-            {/* Title */}
-            <h1 className="font-bold text-[28px] text-[#111827] tracking-[-0.56px] leading-[1.2] mb-2">
-              Enter OTP
-            </h1>
-            <p className="font-normal text-[15px] text-[#6b7280] leading-[1.5] mb-1">
-              Sent to +91 {phoneNumber}
-            </p>
-            <button
-              onClick={handleBackToPhone}
-              className="text-[14px] text-[#1bb658] hover:text-[#16a34a] font-medium transition-colors mb-10 text-left w-fit"
-            >
-              Change number
-            </button>
-
-            {/* OTP Input */}
-            <div className="w-full mb-6">
-              <div className="flex gap-3 justify-center mb-3">
-                {otp.map((digit, index) => (
-                  <input
-                    key={index}
-                    ref={otpInputRefs[index]}
-                    type="text"
-                    inputMode="numeric"
-                    maxLength={1}
-                    value={digit}
-                    onChange={(e) => handleOtpChange(index, e.target.value)}
-                    onKeyDown={(e) => handleOtpKeyDown(index, e)}
-                    onPaste={index === 0 ? handleOtpPaste : undefined}
-                    className="size-[64px] bg-white border-2 border-[#e5e7eb] rounded font-bold text-[28px] text-[#111827] text-center focus:outline-none focus:border-[#1bb658] transition-all duration-200"
-                  />
-                ))}
-              </div>
-              {error && (
-                <p className="text-center text-[13px] text-[#dc2626] font-medium">
-                  {error}
-                </p>
-              )}
-            </div>
-
-            {/* Verify Button */}
-            <button
-              onClick={() => handleVerifyOTP()}
-              disabled={isLoading || otp.some(digit => digit === '')}
-              className="w-full h-[54px] bg-[#1bb658] text-white font-semibold text-[16px] rounded hover:bg-[#16a34a] active:scale-[0.98] transition-all duration-200 disabled:opacity-40 disabled:cursor-not-allowed disabled:hover:bg-[#1bb658] mb-6"
-            >
-              {isLoading ? (
-                <span className="flex items-center justify-center gap-2">
-                  <span className="size-4 border-2 border-white/30 border-t-white rounded-full animate-spin" />
-                  Verifying...
-                </span>
-              ) : (
-                'Verify'
-              )}
-            </button>
-
-            {/* Resend OTP */}
-            <div className="text-center">
-              <button
-                onClick={handleResendOTP}
-                className="text-[14px] text-[#6b7280] hover:text-[#1bb658] font-medium transition-colors"
-              >
-                Didn't receive? <span className="text-[#1bb658] font-semibold">Resend</span>
-              </button>
-            </div>
-          </div>
+          <OTPVerification
+            mobile={phoneNumber}
+            otp={otp}
+            onOtpChange={setOtp}
+            onVerify={handleVerifyOTP}
+            onResend={handleResendOTP}
+            onBack={handleBackToPhone}
+            otpError={otpError}
+            isLoading={isLoading}
+            isVerifying={isVerifying}
+            resendCooldown={resendCooldown}
+            backLabel="Change number"
+          />
         )}
       </div>
 

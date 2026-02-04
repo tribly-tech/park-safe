@@ -763,7 +763,7 @@ export default function Home() {
         <div className="flex flex-col items-center justify-center w-full">
           <div className="flex flex-col items-center justify-center w-full">
             <div className="flex flex-col justify-center text-[#1bb658] text-[48px] md:text-[56px] lg:text-[64px] w-full items-center">
-              <p className="font-bold leading-[1.4] text-center">safe park</p>
+              <p className="font-bold leading-[1.4] text-center">park safe</p>
             </div>
             <div className="flex flex-col justify-center text-[#16a34a] text-[14px] mt-2 w-full items-center">
               <p className="font-medium leading-[20px] text-center">Connect. Resolve. Move on.</p>
