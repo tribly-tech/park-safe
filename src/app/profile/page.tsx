@@ -91,7 +91,7 @@ export default function ProfilePage() {
 
   return (
     <div className="min-h-screen flex flex-col bg-gradient-to-b from-white to-[#fafafa]">
-      {/* Sticky Back Button */}
+      {/* Sticky Header – matches Help & Contact */}
       <div className="sticky top-0 z-10 flex items-center justify-between p-4 bg-gradient-to-b from-white via-white/95 to-transparent backdrop-blur-sm border-b border-[#e5e7eb]">
         <Link
           href={ROUTES.HOME}
@@ -106,12 +106,12 @@ export default function ProfilePage() {
         <div className="size-10" aria-hidden />
       </div>
 
-      {/* Scrollable Content */}
+      {/* Scrollable Content – centered max-width like Help & Contact */}
       <div className="flex-1 overflow-y-auto">
-        {/* Header Section with Gradient */}
-        <div className="px-6 pt-4 pb-8 bg-gradient-to-br from-[#1bb658]/5 via-white to-white">
+        <div className="px-6 py-8 max-w-[440px] mx-auto w-full">
+          {/* Hero / Welcome Section – centered like Help & Contact when guest */}
           {isLoggedInSafe ? (
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-4 mb-8">
               <div className="relative">
                 <div className="size-20 rounded-3xl bg-gradient-to-br from-[#1bb658] to-[#16a34a] flex items-center justify-center shadow-lg shadow-[#1bb658]/20">
                   <UserCircle className="size-12 text-white" />
@@ -141,22 +141,20 @@ export default function ProfilePage() {
               </Link>
             </div>
           ) : (
-            <div>
-              <div className="size-16 rounded-2xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 flex items-center justify-center mb-4">
+            <div className="flex flex-col items-center text-center mb-8">
+              <div className="size-16 rounded-2xl bg-gradient-to-br from-[#1bb658]/15 to-[#16a34a]/10 flex items-center justify-center mb-4 shadow-sm border border-[#1bb658]/20">
                 <UserCircle className="size-8 text-[#1bb658]" />
               </div>
-              <h2 className="font-bold text-[24px] text-[#111827] tracking-[-0.48px] mb-2">
+              <h1 className="font-bold text-[24px] text-[#111827] tracking-[-0.48px] mb-2">
                 Welcome to Park Safe
-              </h2>
-              <p className="font-normal text-[15px] text-[#6b7280] leading-[1.6]">
+              </h1>
+              <p className="font-normal text-[15px] text-[#6b7280] leading-[1.5] max-w-[320px]">
                 Sign in to manage your QR codes and vehicle settings
               </p>
             </div>
           )}
-        </div>
 
-        {/* Menu Items */}
-        <div className="px-6 py-6">
+          {/* Menu Items */}
           <div className="flex flex-col gap-2">
             {isLoggedInSafe ? (
               <>
@@ -165,9 +163,9 @@ export default function ProfilePage() {
                   <div className="mb-4">
                     <Link
                       href={ROUTES.VEHICLE_EDIT}
-                      className="group flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.99] text-left"
+                      className="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.99] text-left"
                     >
-                      <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f4f4f5] group-hover:bg-[#f0fdf4] transition-colors">
+                      <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
                         <Truck className="size-6 text-[#52525b]" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -201,7 +199,7 @@ export default function ProfilePage() {
                   <button
                     type="button"
                     onClick={() => setIsRegisterQRModalOpen(true)}
-                    className="group w-full flex items-center gap-4 p-4 rounded-2xl bg-gradient-to-br from-[#f0fdf4] to-white border border-[#1bb658] shadow-[0px_4px_0px_0px_#1bb658] hover:shadow-[0px_6px_0px_0px_#1bb658] hover:translate-y-[-1px] transition-all duration-200 active:scale-[0.99] text-left"
+                    className="group w-full flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-br from-[#f0fdf4] to-white border border-[#1bb658] shadow-[0px_4px_0px_0px_#1bb658] hover:shadow-[0px_6px_0px_0px_#1bb658] hover:translate-y-[-1px] transition-all duration-200 active:scale-[0.99] text-left"
                   >
                     <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-white shadow-sm group-hover:bg-[#f0fdf4] transition-colors">
                       <QrCode className="size-5 text-[#1bb658]" />
@@ -223,19 +221,19 @@ export default function ProfilePage() {
                   <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1">
                     Quick Actions
                   </p>
-                  <div className="flex flex-col gap-2">
+                  <div className="flex flex-col gap-4">
                     <Link
                       href={ROUTES.SETTINGS}
-                      className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98]"
+                      className="group relative flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98]"
                     >
-                      <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                        <Settings className="size-5 text-[#1bb658]" />
+                      <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
+                        <Settings className="size-6 text-[#1bb658]" />
                       </div>
                       <div className="flex-1 min-w-0">
                         <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px]">
                           Settings
                         </p>
-                        <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 truncate">
+                        <p className="font-normal text-[14px] text-[#6b7280] mt-0.5 truncate">
                           App preferences
                         </p>
                       </div>
@@ -247,7 +245,7 @@ export default function ProfilePage() {
             ) : (
               <button
                 onClick={handleLogin}
-                className="group relative w-full flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#1bb658] to-[#16a34a] text-white hover:shadow-xl hover:shadow-[#1bb658]/25 transition-all duration-200 active:scale-[0.98] mb-4"
+                className="group relative w-full flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#1bb658] to-[#16a34a] text-white hover:shadow-xl hover:shadow-[#1bb658]/25 transition-all duration-200 active:scale-[0.98] mb-6"
               >
                 <div className="shrink-0 size-12 flex items-center justify-center bg-white/20 rounded-xl group-hover:bg-white/30 transition-all">
                   <LogIn className="size-6 text-white" />
@@ -265,23 +263,23 @@ export default function ProfilePage() {
             )}
 
             {/* Support Section */}
-            <div className="mb-4">
+            <div className="mb-6">
               <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1 text-left">
                 Support
               </p>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <button
                   onClick={handleSupport}
-                  className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left w-full"
+                  className="group relative flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left w-full"
                 >
-                  <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                    <HelpCircle className="size-5 text-[#1bb658]" />
+                  <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
+                    <HelpCircle className="size-6 text-[#1bb658]" />
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px] text-left">
                       Help & Contact
                     </p>
-                    <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 text-left">
+                    <p className="font-normal text-[14px] text-[#6b7280] mt-0.5 text-left">
                       Get help and contact support
                     </p>
                   </div>
@@ -295,19 +293,19 @@ export default function ProfilePage() {
               <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1 text-left">
                 Legal
               </p>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <button
                   onClick={handleTerms}
-                  className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left w-full"
+                  className="group relative flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left w-full"
                 >
-                  <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                    <FileText className="size-5 text-[#1bb658]" />
+                  <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
+                    <FileText className="size-6 text-[#1bb658]" />
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px] text-left">
                       Terms of Service
                     </p>
-                    <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 text-left">
+                    <p className="font-normal text-[14px] text-[#6b7280] mt-0.5 text-left">
                       Read our terms and conditions
                     </p>
                   </div>
@@ -316,16 +314,16 @@ export default function ProfilePage() {
 
                 <button
                   onClick={handlePolicies}
-                  className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left w-full"
+                  className="group relative flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left w-full"
                 >
-                  <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                    <Shield className="size-5 text-[#1bb658]" />
+                  <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
+                    <Shield className="size-6 text-[#1bb658]" />
                   </div>
                   <div className="flex-1 min-w-0 text-left">
                     <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px] text-left">
                       Privacy Policy
                     </p>
-                    <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 text-left">
+                    <p className="font-normal text-[14px] text-[#6b7280] mt-0.5 text-left">
                       How we protect your data
                     </p>
                   </div>
@@ -334,10 +332,9 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
-        </div>
 
-        {/* Footer Section */}
-        <div className="px-6 py-5 border-t border-[#e5e7eb] bg-white/50 backdrop-blur-sm">
+          {/* Footer Section – inside centered column */}
+          <div className="mt-8 pt-6 border-t border-[#e5e7eb]">
           {isLoggedInSafe ? (
             <button
               onClick={handleLogout}
@@ -360,6 +357,7 @@ export default function ProfilePage() {
               Park Safe v1.0.0
             </p>
           )}
+          </div>
         </div>
       </div>
 
