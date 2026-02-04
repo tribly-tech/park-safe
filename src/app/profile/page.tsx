@@ -12,7 +12,6 @@ import {
   FileText,
   Shield,
   LogOut,
-  Settings,
   Edit3,
   Tag,
   ShoppingCart,
@@ -241,32 +240,6 @@ export default function ProfilePage() {
                     <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors shrink-0" />
                   </button>
                 </div>
-
-                {/* Quick Actions Section */}
-                <div className="mb-4">
-                  <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1">
-                    Quick Actions
-                  </p>
-                  <div className="flex flex-col gap-4">
-                    <Link
-                      href={ROUTES.SETTINGS}
-                      className="group relative flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98]"
-                    >
-                      <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
-                        <Settings className="size-6 text-[#1bb658]" />
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px]">
-                          Settings
-                        </p>
-                        <p className="font-normal text-[14px] text-[#6b7280] mt-0.5 truncate">
-                          App preferences
-                        </p>
-                      </div>
-                      <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors" />
-                    </Link>
-                  </div>
-                </div>
               </>
             ) : (
               <button
@@ -416,9 +389,9 @@ export default function ProfilePage() {
               <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors shrink-0 ml-auto" />
             </button>
             <Link
-              href={ROUTES.SUPPORT}
+              href={`${ROUTES.HOME}#pricing`}
               onClick={() => setIsRegisterQRModalOpen(false)}
-              className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left group"
+              className="flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left group w-full"
             >
               <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
                 <ShoppingCart className="size-5 text-[#1bb658]" />

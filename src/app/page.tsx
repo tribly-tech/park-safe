@@ -364,7 +364,7 @@ export default function Home() {
         </section>
 
         {/* Safe Park Tags – product cards with pricing (soft colors, Buy now, 4px radius) */}
-        <div className="flex flex-col sm:flex-row gap-4 items-stretch w-full mt-8 md:mt-10">
+        <div id="pricing" className="flex flex-col sm:flex-row gap-4 items-stretch w-full mt-8 md:mt-10 scroll-mt-24">
           {/* Card 1: Single tag – soft green */}
           <div className="bg-white flex flex-1 flex-col gap-4 items-start min-w-px p-6 rounded-[24px] border border-[#a7f3d0] shadow-[0px_4px_0px_0px_rgba(134,239,172,0.5)] transition-all duration-200 group hover:shadow-[0px_6px_0px_0px_rgba(134,239,172,0.5)] hover:-translate-y-0.5">
             <div className="relative shrink-0 size-14 flex items-center justify-center bg-[#ecfdf5] rounded-2xl p-3 group-hover:bg-[#d1fae5] transition-colors">

@@ -46,7 +46,6 @@ export const ROUTES = {
   PROFILE: '/profile',
   PROFILE_EDIT: '/profile/edit',
   VEHICLE_EDIT: '/profile/vehicle/edit',
-  SETTINGS: '/settings',
   SUPPORT: '/support',
   TERMS: '/terms',
   PRIVACY: '/privacy',
