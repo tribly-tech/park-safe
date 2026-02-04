@@ -58,6 +58,15 @@ export interface VehicleRegistrationData {
   consent: boolean
 }
 
+/** Stored vehicle for profile card and edit vehicle page */
+export interface VehicleData {
+  make: string
+  model: string
+  licensePlate: string
+  color: string
+  phone?: string
+}
+
 // Utility types
 export type Nullable<T> = T | null
 export type Optional<T> = T | undefined

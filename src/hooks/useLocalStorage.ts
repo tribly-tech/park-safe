@@ -1,9 +1,20 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
+
+function getStoredValue<T>(key: string, initialValue: T): T {
+  if (typeof window === 'undefined') return initialValue
+  try {
+    const item = window.localStorage.getItem(key)
+    return item ? (JSON.parse(item) as T) : initialValue
+  } catch {
+    return initialValue
+  }
+}
 
 /**
- * Custom hook for managing localStorage with React state
+ * Custom hook for managing localStorage with React state.
+ * Reads from localStorage during initial state so the first paint matches stored value (avoids flash on refresh).
  * @param key - localStorage key
  * @param initialValue - initial value if key doesn't exist
  * @returns [value, setValue, removeValue]
@@ -12,19 +23,15 @@ export function useLocalStorage<T>(
   key: string,
   initialValue: T
 ): [T, (value: T | ((val: T) => T)) => void, () => void] {
-  // State to store our value
-  const [storedValue, setStoredValue] = useState<T>(initialValue)
+  const [storedValue, setStoredValue] = useState<T>(() =>
+    getStoredValue(key, initialValue)
+  )
+  const initialValueRef = useRef(initialValue)
+  initialValueRef.current = initialValue
 
-  // Get from localStorage on mount
+  // Re-read from localStorage when key changes. Use ref for initialValue so dependency array size stays constant.
   useEffect(() => {
-    try {
-      const item = window.localStorage.getItem(key)
-      if (item) {
-        setStoredValue(JSON.parse(item))
-      }
-    } catch (error) {
-      console.error(`Error reading localStorage key "${key}":`, error)
-    }
+    setStoredValue(getStoredValue(key, initialValueRef.current))
   }, [key])
 
   // Return a wrapped version of useState's setter function that

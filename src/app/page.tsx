@@ -11,15 +11,7 @@ import {
   ShieldCheck, 
   ToggleLeft,
   Youtube,
-  LogIn,
-  HelpCircle,
-  FileText,
-  Shield,
-  LogOut,
-  Settings,
   Mail,
-  Edit3,
-  X as XIcon,
   Zap,
   Heart,
   Gift,
@@ -31,13 +23,6 @@ import {
   ShoppingCart,
 } from 'lucide-react'
 import Link from 'next/link'
-import {
-  Sheet,
-  SheetContent,
-  SheetHeader,
-  SheetTitle,
-} from '@/components/ui/sheet'
-import * as SheetPrimitive from '@radix-ui/react-dialog'
 import { ROUTES, STORAGE_KEYS } from '@/lib/constants'
 import QRScanner from '@/components/QRScanner'
 import { toast } from 'sonner'
@@ -84,22 +69,19 @@ const faqItems = [
 
 export default function Home() {
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null)
-  const [isDrawerOpen, setIsDrawerOpen] = useState(false)
-  const [isLoggedIn, setIsLoggedIn, removeIsLoggedIn] = useLocalStorage<boolean>(STORAGE_KEYS.USER, false)
+  const [isLoggedIn, setIsLoggedIn] = useLocalStorage<boolean>(STORAGE_KEYS.USER, false)
   const [isScannerOpen, setIsScannerOpen] = useState(false)
-  const [hasRegisteredVehicle, setHasRegisteredVehicle] = useState(false)
   const [heroProblemIndex, setHeroProblemIndex] = useState(0)
 
   // Check for query parameters on mount (for backward compatibility and initial login)
   useEffect(() => {
     const params = new URLSearchParams(window.location.search)
     if (params.get('drawer') === 'open') {
-      setIsDrawerOpen(true)
+      window.location.href = ROUTES.PROFILE
+      return
     }
     if (params.get('loggedIn') === 'true') {
       setIsLoggedIn(true)
-      // By default, new users don't have a registered vehicle
-      setHasRegisteredVehicle(false)
     }
     // Clean up URL
     if (params.has('drawer') || params.has('loggedIn')) {
@@ -119,34 +101,6 @@ export default function Home() {
   const goToHeroProblem = (index: number) => setHeroProblemIndex(index)
   const nextHeroProblem = () => setHeroProblemIndex((prev) => (prev + 1) % problemImages.length)
   const prevHeroProblem = () => setHeroProblemIndex((prev) => (prev - 1 + problemImages.length) % problemImages.length)
-
-  const handleLogin = () => {
-    setIsDrawerOpen(false)
-    window.location.href = ROUTES.LOGIN
-  }
-
-  const handleLogout = () => {
-    removeIsLoggedIn()
-    setIsLoggedIn(false)
-    setIsDrawerOpen(false)
-    toast.success('Signed out successfully', {
-      description: 'You have been logged out of your account',
-      duration: 3000,
-    })
-  }
-
-  const handleSupport = () => {
-    setIsDrawerOpen(false)
-    window.location.href = ROUTES.SUPPORT
-  }
-
-  const handleTerms = () => {
-    setIsDrawerOpen(false)
-  }
-
-  const handlePolicies = () => {
-    setIsDrawerOpen(false)
-  }
 
   const handleOpenScanner = () => {
     setIsScannerOpen(true)
@@ -182,16 +136,6 @@ export default function Home() {
     })
   }
 
-  const handleRegisterVehicle = () => {
-    setIsDrawerOpen(false)
-    // TODO: Navigate to vehicle registration page
-    // For now, just show a toast
-    toast.success('Opening vehicle registration', {
-      description: 'Complete your profile to get your QR code',
-      duration: 3000,
-    })
-  }
-
   return (
     <div className="relative min-h-screen w-full bg-gradient-to-b from-white via-[#f8fffb] to-[#f1fff7]">
       {/* Navigation Bar - sticky, glass/blur, glossy */}
@@ -219,13 +163,13 @@ export default function Home() {
               </Link>
             </nav>
             <div className="flex items-center gap-2">
-              <button
-                onClick={() => setIsDrawerOpen(true)}
+              <Link
+                href={ROUTES.PROFILE}
                 className="overflow-clip shrink-0 size-9 md:size-10 flex items-center justify-center cursor-pointer hover:opacity-80 transition-opacity rounded-full hover:bg-[#f0fdf4]"
-                aria-label="Account menu"
+                aria-label="Account / Profile"
               >
                 <UserCircle className="size-9 md:size-10 text-[#4ade80]" strokeWidth={1.25} />
-              </button>
+              </Link>
             </div>
           </div>
         </div>
@@ -862,245 +806,6 @@ export default function Home() {
         onScanError={handleScanError}
       />
 
-      {/* Profile Drawer */}
-      <Sheet open={isDrawerOpen} onOpenChange={setIsDrawerOpen}>
-        <SheetContent side="right" className="!w-full max-w-[440px] p-0 flex flex-col bg-gradient-to-b from-white to-[#fafafa] overflow-hidden" showCloseButton={false}>
-          <SheetHeader className="sr-only">
-            <SheetTitle>
-              {isLoggedIn ? 'Account Menu' : 'Welcome to Park Safe'}
-            </SheetTitle>
-          </SheetHeader>
-          
-          {/* Sticky Close Button */}
-          <div className="sticky top-0 z-10 flex justify-end p-4 bg-gradient-to-b from-white via-white/95 to-transparent backdrop-blur-sm">
-            <SheetPrimitive.Close className="group shrink-0 size-10 flex items-center justify-center rounded-full bg-white border border-[#e5e7eb] hover:border-[#dc2626] hover:bg-[#fef2f2] transition-all duration-200 active:scale-95 focus:outline-hidden shadow-sm">
-              <XIcon className="size-5 text-[#6b7280] group-hover:text-[#dc2626] transition-colors" />
-              <span className="sr-only">Close</span>
-            </SheetPrimitive.Close>
-          </div>
-
-          {/* Scrollable Content */}
-          <div className="flex-1 overflow-y-auto">
-            {/* Header Section with Gradient */}
-            <div className="px-6 pt-4 pb-8 bg-gradient-to-br from-[#1bb658]/5 via-white to-white">
-            {isLoggedIn ? (
-              <div className="flex items-center gap-4">
-                <div className="relative">
-                  <div className="size-20 rounded-3xl bg-gradient-to-br from-[#1bb658] to-[#16a34a] flex items-center justify-center shadow-lg shadow-[#1bb658]/20">
-                    <UserCircle className="size-12 text-white" />
-                  </div>
-                  <div className="absolute -bottom-1 -right-1 size-6 rounded-full bg-white border-2 border-white flex items-center justify-center">
-                    <div className="size-3 rounded-full bg-[#1bb658]" />
-                  </div>
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-bold text-[20px] text-[#111827] tracking-[-0.4px] truncate">
-                    {hasRegisteredVehicle ? 'John Doe' : 'Hey guest'}
-                  </p>
-                  <div className="flex items-center gap-2 mt-2">
-                    <div className="px-2.5 py-1 rounded-full bg-[#dcfce7]">
-                      <p className="font-medium text-[11px] text-[#16a34a] uppercase tracking-wide">
-                        Active
-                      </p>
-                    </div>
-                  </div>
-                </div>
-                <Link
-                  href={ROUTES.PROFILE}
-                  onClick={() => setIsDrawerOpen(false)}
-                  className="shrink-0 size-10 flex items-center justify-center rounded-full bg-white border border-[#e5e7eb] hover:border-[#1bb658] hover:bg-[#f1fff7] transition-all duration-200 active:scale-95"
-                >
-                  <Edit3 className="size-4 text-[#1bb658]" />
-                </Link>
-              </div>
-            ) : (
-              <div>
-                <div className="size-16 rounded-2xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 flex items-center justify-center mb-4">
-                  <UserCircle className="size-8 text-[#1bb658]" />
-                </div>
-                <h2 className="font-bold text-[24px] text-[#111827] tracking-[-0.48px] mb-2">
-                  Welcome to Park Safe
-                </h2>
-                <p className="font-normal text-[15px] text-[#6b7280] leading-[1.6]">
-                  Sign in to manage your QR codes and vehicle settings
-                </p>
-              </div>
-            )}
-          </div>
-
-              {/* Menu Items */}
-              <div className="px-6 py-6">
-                <div className="flex flex-col gap-2">
-              {isLoggedIn ? (
-                <>
-                  {/* Registration Card for Guest Users */}
-                  {!hasRegisteredVehicle && (
-                    <div className="mb-6">
-                      <div className="bg-gradient-to-br from-[#f0fdf4] to-white border border-[#1bb658] rounded-[24px] p-6 shadow-[0px_4px_0px_0px_#1bb658]">
-                        <div className="flex flex-col gap-4 items-center text-center">
-                          <div className="relative shrink-0 size-16 flex items-center justify-center bg-white rounded-2xl shadow-sm">
-                            <QrCode className="size-8 text-[#1bb658]" />
-                          </div>
-                          <div className="flex flex-col gap-2">
-                            <p className="font-bold text-[18px] text-[#111827] tracking-[-0.36px]">
-                              Register park safe QR
-                            </p>
-                            <p className="font-normal text-[14px] text-[#6b7280] leading-[1.5]">
-                              Get your free QR code in 2 minutes
-                            </p>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Quick Actions Section */}
-                  <div className="mb-4">
-                    <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1">
-                      Quick Actions
-                    </p>
-                    <div className="flex flex-col gap-2">
-                      <Link
-                        href={ROUTES.SETTINGS}
-                        onClick={() => setIsDrawerOpen(false)}
-                        className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98]"
-                      >
-                        <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                          <Settings className="size-5 text-[#1bb658]" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px]">
-                            Settings
-                          </p>
-                          <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 truncate">
-                            App preferences
-                          </p>
-                        </div>
-                        <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors" />
-                      </Link>
-                    </div>
-                  </div>
-                </>
-              ) : (
-                <button
-                  onClick={handleLogin}
-                  className="group relative w-full flex items-center gap-4 p-5 rounded-2xl bg-gradient-to-r from-[#1bb658] to-[#16a34a] text-white hover:shadow-xl hover:shadow-[#1bb658]/25 transition-all duration-200 active:scale-[0.98] mb-4"
-                >
-                  <div className="shrink-0 size-12 flex items-center justify-center bg-white/20 rounded-xl group-hover:bg-white/30 transition-all">
-                    <LogIn className="size-6 text-white" />
-                  </div>
-                  <div className="flex-1 text-left">
-                    <p className="font-bold text-[17px] tracking-[-0.34px]">
-                      Sign In
-                    </p>
-                    <p className="font-normal text-[13px] text-white/90 mt-0.5">
-                      Access your account
-                    </p>
-                  </div>
-                  <ChevronRight className="size-5 text-white/80 group-hover:text-white group-hover:translate-x-1 transition-all" />
-                </button>
-              )}
-
-              {/* Support Section */}
-              <div className="mb-4">
-                <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1 text-left">
-                  Support
-                </p>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={handleSupport}
-                    className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left"
-                  >
-                    <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                      <HelpCircle className="size-5 text-[#1bb658]" />
-                    </div>
-                    <div className="flex-1 min-w-0 text-left">
-                      <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px] text-left">
-                        Help & Contact
-                      </p>
-                      <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 text-left">
-                        Get help and contact support
-                      </p>
-                    </div>
-                    <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors shrink-0" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Legal Section */}
-              <div>
-                <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1 text-left">
-                  Legal
-                </p>
-                <div className="flex flex-col gap-2">
-                  <button
-                    onClick={handleTerms}
-                    className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left"
-                  >
-                    <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                      <FileText className="size-5 text-[#1bb658]" />
-                    </div>
-                    <div className="flex-1 min-w-0 text-left">
-                      <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px] text-left">
-                        Terms of Service
-                      </p>
-                      <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 text-left">
-                        Read our terms and conditions
-                      </p>
-                    </div>
-                    <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors shrink-0" />
-                  </button>
-
-                  <button
-                    onClick={handlePolicies}
-                    className="group relative flex items-center gap-4 p-4 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left"
-                  >
-                    <div className="shrink-0 size-11 flex items-center justify-center rounded-xl bg-gradient-to-br from-[#1bb658]/10 to-[#16a34a]/5 group-hover:from-[#1bb658]/20 group-hover:to-[#16a34a]/10 transition-all">
-                      <Shield className="size-5 text-[#1bb658]" />
-                    </div>
-                    <div className="flex-1 min-w-0 text-left">
-                      <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px] text-left">
-                        Privacy Policy
-                      </p>
-                      <p className="font-normal text-[13px] text-[#6b7280] mt-0.5 text-left">
-                        How we protect your data
-                      </p>
-                    </div>
-                    <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors shrink-0" />
-                  </button>
-                </div>
-              </div>
-                </div>
-              </div>
-
-              {/* Footer Section */}
-              <div className="px-6 py-5 border-t border-[#e5e7eb] bg-white/50 backdrop-blur-sm">
-                {isLoggedIn ? (
-                  <button
-                    onClick={handleLogout}
-                    className="w-full flex items-center justify-center gap-3 p-4 rounded bg-gradient-to-r from-[#f3f4f6] to-[#e5e7eb] hover:from-[#e5e7eb] hover:to-[#d1d5db] active:scale-[0.98] transition-all duration-200 group border border-[#e5e7eb]"
-                  >
-                    <LogOut className="size-5 text-[#6b7280] group-hover:scale-110 transition-transform" />
-                    <p className="font-semibold text-[16px] text-[#6b7280] tracking-[-0.32px]">
-                      Sign Out
-                    </p>
-                  </button>
-                ) : (
-                  <div className="text-center">
-                    <p className="font-normal text-[12px] text-[#9ca3af]">
-                      Park Safe v1.0.0
-                    </p>
-                  </div>
-                )}
-                {isLoggedIn && (
-                  <p className="text-center font-normal text-[11px] text-[#d1d5db] mt-2">
-                    Park Safe v1.0.0
-                  </p>
-                )}
-              </div>
-          </div>
-        </SheetContent>
-      </Sheet>
-    </div>
+      </div>
   )
 }

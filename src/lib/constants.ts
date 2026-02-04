@@ -32,6 +32,8 @@ export const STORAGE_KEYS = {
   THEME: 'theme',
   USER: 'user',
   TOKEN: 'token',
+  PROFILE: 'park_safe_profile',
+  VEHICLE: 'park_safe_vehicle',
 } as const
 
 // Routes
@@ -43,8 +45,12 @@ export const ROUTES = {
   REGISTER_VEHICLE_SUCCESS: '/register-vehicle/success',
   DASHBOARD: '/home',
   PROFILE: '/profile',
+  PROFILE_EDIT: '/profile/edit',
+  VEHICLE_EDIT: '/profile/vehicle/edit',
   SETTINGS: '/settings',
   SUPPORT: '/support',
+  TERMS: '/terms',
+  PRIVACY: '/privacy',
   CONTACT_OWNER: '/contact-owner',
   CONTACT_OWNER_VERIFY: '/contact-owner/verify',
   CONTACT_OWNER_CHOOSE_ACTION: '/contact-owner/choose-action',

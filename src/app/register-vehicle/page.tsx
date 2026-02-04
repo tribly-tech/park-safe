@@ -7,7 +7,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import * as z from 'zod'
 import { Check, ArrowLeft, Car, User, Phone, Shield, ShieldCheck } from 'lucide-react'
 import Link from 'next/link'
-import { ROUTES } from '@/lib/constants'
+import { ROUTES, STORAGE_KEYS } from '@/lib/constants'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import {
@@ -108,6 +108,7 @@ export default function RegisterVehiclePage() {
     setValue,
     watch,
     reset,
+    getValues,
   } = useForm<VehicleFormData>({
     resolver: zodResolver(vehicleSchema),
     mode: 'onBlur', // Validate on blur (after user finishes entering)
@@ -184,6 +185,17 @@ export default function RegisterVehiclePage() {
     try {
       // Simulate OTP verification API call
       await new Promise((resolve) => setTimeout(resolve, 1500))
+      const formData = getValues()
+      const vehicleData = {
+        make: formData.vehicleBrand.trim(),
+        model: formData.vehicleModel.trim(),
+        licensePlate: formData.vehicleNumber.replace(/\s/g, '').toUpperCase(),
+        color: formData.vehicleColor.trim(),
+        phone: formData.ownerMobile.trim().replace(/\D/g, '').slice(0, 10),
+      }
+      if (typeof window !== 'undefined') {
+        window.localStorage.setItem(STORAGE_KEYS.VEHICLE, JSON.stringify(vehicleData))
+      }
       router.push(ROUTES.REGISTER_VEHICLE_SUCCESS)
     } finally {
       setIsLoading(false)
