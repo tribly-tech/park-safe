@@ -89,7 +89,7 @@ export default function PrivacyPage() {
               6. Your Rights
             </h2>
             <p>
-              Depending on your location, you may have rights to access, correct, delete, or port your data, or to object to or restrict certain processing. You can update profile and contact details in the app; for other requests, contact us at support@parksafe.com.
+              Depending on your location, you may have rights to access, correct, delete, or port your data, or to object to or restrict certain processing. You can update profile and contact details in the app; for other requests, contact us at parksafe@tribly.ai.
             </p>
           </section>
 
@@ -107,7 +107,7 @@ export default function PrivacyPage() {
               8. Contact
             </h2>
             <p>
-              For privacy-related questions or requests, contact us at support@parksafe.com or through the Help & Contact section in the app.
+              For privacy-related questions or requests, contact us at parksafe@tribly.ai or through the Help & Contact section in the app.
             </p>
           </section>
         </div>

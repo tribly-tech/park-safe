@@ -2,16 +2,19 @@
 
 import { MessageSquare, Phone, ChevronRight, ArrowLeft, ShieldCheck, Check } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, useParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { ROUTES } from '@/lib/constants'
+import { ROUTES, getContactOwnerRoutes } from '@/lib/constants'
 import { toast } from 'sonner'
 import { Button } from '@/components/ui/button'
 import { issues, VALID_ISSUE_IDS, type IssueType } from '@/lib/contact-owner-data'
 
 function ChooseActionContent() {
   const router = useRouter()
+  const params = useParams()
   const searchParams = useSearchParams()
+  const vehicleId = (params?.vehicleId as string) ?? ''
+  const routes = getContactOwnerRoutes(vehicleId)
   const issueParam = searchParams.get('issue') as IssueType | null
 
   const selectedIssue = VALID_ISSUE_IDS.includes(issueParam as IssueType) ? issueParam : null
@@ -24,7 +27,7 @@ function ChooseActionContent() {
           Invalid or missing issue. Please select an issue first.
         </p>
         <div className="flex flex-col gap-3 w-full max-w-[280px]">
-          <Link href={ROUTES.CONTACT_OWNER}>
+          <Link href={routes.base}>
             <Button className="w-full bg-[#1bb658] hover:bg-[#16a34a] text-white">
               Select Issue
             </Button>
@@ -45,7 +48,7 @@ function ChooseActionContent() {
     })
 
     setTimeout(() => {
-      router.push(`${ROUTES.CONTACT_OWNER_SUCCESS}?action=message&issue=${selectedIssue}`)
+      router.push(`${routes.success}?action=message&issue=${selectedIssue}`)
       toast.success('Message delivered!', {
         description: 'The vehicle owner has been notified.',
         duration: 4000,
@@ -59,7 +62,7 @@ function ChooseActionContent() {
     })
 
     setTimeout(() => {
-      router.push(`${ROUTES.CONTACT_OWNER_SUCCESS}?action=call&issue=${selectedIssue}`)
+      router.push(`${routes.success}?action=call&issue=${selectedIssue}`)
       toast.success('Call connected!', {
         description: 'Your number is protected.',
         duration: 4000,
@@ -100,7 +103,7 @@ function ChooseActionContent() {
         <div className="flex flex-col gap-6 animate-in fade-in slide-in-from-right-4 duration-300">
           {/* Back Button */}
           <Link
-            href={ROUTES.CONTACT_OWNER}
+            href={routes.base}
             className="flex items-center gap-2 text-[#6b7280] hover:text-[#111827] transition-colors group w-fit"
           >
             <div className="size-8 flex items-center justify-center rounded-full bg-[#f8fafb] group-hover:bg-[#f3f4f6] transition-colors">

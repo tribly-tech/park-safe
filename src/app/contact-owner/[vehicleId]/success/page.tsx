@@ -2,14 +2,17 @@
 
 import { Check, ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { useSearchParams } from 'next/navigation'
+import { useSearchParams, useParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { ROUTES } from '@/lib/constants'
+import { ROUTES, getContactOwnerRoutes } from '@/lib/constants'
 import { Button } from '@/components/ui/button'
 import { issues, VALID_ISSUE_IDS, VALID_ACTION_IDS, type IssueType, type ActionType } from '@/lib/contact-owner-data'
 
 function SuccessContent() {
+  const params = useParams()
   const searchParams = useSearchParams()
+  const vehicleId = (params?.vehicleId as string) ?? ''
+  const routes = getContactOwnerRoutes(vehicleId)
   const actionParam = searchParams.get('action') as ActionType | null
   const issueParam = searchParams.get('issue') as IssueType | null
 
@@ -24,7 +27,7 @@ function SuccessContent() {
           Invalid or missing data. Please complete the contact flow first.
         </p>
         <div className="flex flex-col gap-3 w-full max-w-[280px]">
-          <Link href={ROUTES.CONTACT_OWNER}>
+          <Link href={routes.base}>
             <Button className="w-full bg-[#1bb658] hover:bg-[#16a34a] text-white">
               Contact Owner
             </Button>
@@ -55,7 +58,7 @@ function SuccessContent() {
       <div className="bg-white border-b border-[#e5e7eb]">
         <div className="flex items-center justify-between px-6 py-5">
           <Link
-            href={`${ROUTES.CONTACT_OWNER_CHOOSE_ACTION}?issue=${selectedIssue}`}
+            href={`${routes.chooseAction}?issue=${selectedIssue}`}
             className="size-9 flex items-center justify-center rounded-full bg-[#f8fafb] hover:bg-[#f3f4f6] transition-colors group"
           >
             <ArrowLeft className="size-4 text-[#6b7280] group-hover:text-[#111827] transition-colors" />

@@ -47,7 +47,7 @@ export default function SupportPage() {
         {/* Contact cards */}
         <div className="flex flex-col gap-4 mb-8">
           <a
-            href="mailto:support@parksafe.com"
+            href="mailto:parksafe@tribly.ai"
             className="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.99] text-left"
           >
             <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
@@ -58,14 +58,14 @@ export default function SupportPage() {
                 Email us
               </p>
               <p className="font-normal text-[14px] text-[#6b7280] mt-0.5 truncate">
-                support@parksafe.com
+                parksafe@tribly.ai
               </p>
             </div>
             <ExternalLink className="size-4 text-[#9ca3af] group-hover:text-[#1bb658] transition-colors shrink-0" />
           </a>
 
           <a
-            href="https://wa.me/15551234567"
+            href="https://wa.me/919010640909"
             target="_blank"
             rel="noopener noreferrer"
             className="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.99] text-left"
@@ -78,14 +78,14 @@ export default function SupportPage() {
                 WhatsApp
               </p>
               <p className="font-normal text-[14px] text-[#6b7280] mt-0.5">
-                Chat with us on WhatsApp
+                +91 90106 40909
               </p>
             </div>
             <ExternalLink className="size-4 text-[#9ca3af] group-hover:text-[#1bb658] transition-colors shrink-0" />
           </a>
 
           <a
-            href="tel:+15551234567"
+            href="tel:+918977719997"
             className="group flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.99] text-left"
           >
             <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
@@ -96,7 +96,7 @@ export default function SupportPage() {
                 Call us
               </p>
               <p className="font-normal text-[14px] text-[#6b7280] mt-0.5">
-                +1 (555) 123-4567
+                +91 89777 19997
               </p>
             </div>
             <ExternalLink className="size-4 text-[#9ca3af] group-hover:text-[#1bb658] transition-colors shrink-0" />

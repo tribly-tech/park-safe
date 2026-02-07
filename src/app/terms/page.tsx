@@ -98,7 +98,7 @@ export default function TermsPage() {
               7. Contact
             </h2>
             <p>
-              For questions about these Terms, contact us at support@parksafe.com or through the Help & Contact section in the app.
+              For questions about these Terms, contact us at parksafe@tribly.ai or through the Help & Contact section in the app.
             </p>
           </section>
         </div>

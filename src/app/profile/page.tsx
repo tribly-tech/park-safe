@@ -17,6 +17,7 @@ import {
   ShoppingCart,
   ChevronRight,
   Truck,
+  Flag,
 } from 'lucide-react'
 import { ROUTES, STORAGE_KEYS } from '@/lib/constants'
 import { useLocalStorage } from '@/hooks/useLocalStorage'
@@ -239,6 +240,32 @@ export default function ProfilePage() {
                     </div>
                     <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors shrink-0" />
                   </button>
+                </div>
+
+                {/* Report Section */}
+                <div className="mb-6">
+                  <p className="font-semibold text-[12px] text-[#9ca3af] uppercase tracking-wider mb-3 px-1 text-left">
+                    Report
+                  </p>
+                  <div className="flex flex-col gap-4">
+                    <Link
+                      href={ROUTES.PROFILE_REPORTS}
+                      className="group relative flex items-center gap-4 p-5 rounded-2xl bg-white border border-[#e5e7eb] hover:border-[#1bb658]/30 hover:shadow-md hover:shadow-[#1bb658]/5 transition-all duration-200 active:scale-[0.98] text-left w-full"
+                    >
+                      <div className="shrink-0 size-12 flex items-center justify-center rounded-xl bg-[#f0fdf4] group-hover:bg-[#dcfce7] transition-colors">
+                        <Flag className="size-6 text-[#1bb658]" />
+                      </div>
+                      <div className="flex-1 min-w-0 text-left">
+                        <p className="font-semibold text-[16px] text-[#111827] tracking-[-0.32px] text-left">
+                          Report activity
+                        </p>
+                        <p className="font-normal text-[14px] text-[#6b7280] mt-0.5 text-left">
+                          View reports against you and dispute wrong claims
+                        </p>
+                      </div>
+                      <ChevronRight className="size-4 text-[#d1d5db] group-hover:text-[#1bb658] transition-colors shrink-0" />
+                    </Link>
+                  </div>
                 </div>
               </>
             ) : (

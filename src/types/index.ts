@@ -67,6 +67,26 @@ export interface VehicleData {
   phone?: string
 }
 
+/** Report filed against the user (someone reported their vehicle) */
+export type ReportStatus = 'under_review' | 'resolved' | 'disputed'
+
+export interface ReportDispute {
+  submittedAt: string // ISO
+  reason: string
+}
+
+export interface ReportActivity {
+  id: string
+  reportId?: string // unique 6-digit display ID e.g. "847291"
+  date: string // ISO
+  issueType: string // e.g. 'blocking', 'lights'
+  issueTitle: string
+  reporterLabel: string // e.g. 'Anonymous user'
+  message?: string
+  status: ReportStatus
+  dispute?: ReportDispute
+}
+
 // Utility types
 export type Nullable<T> = T | null
 export type Optional<T> = T | undefined

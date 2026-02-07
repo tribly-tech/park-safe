@@ -33,6 +33,7 @@ export const STORAGE_KEYS = {
   TOKEN: 'token',
   PROFILE: 'park_safe_profile',
   VEHICLE: 'park_safe_vehicle',
+  REPORT_ACTIVITY: 'park_safe_report_activity',
 } as const
 
 // Routes
@@ -45,6 +46,7 @@ export const ROUTES = {
   DASHBOARD: '/home',
   PROFILE: '/profile',
   PROFILE_EDIT: '/profile/edit',
+  PROFILE_REPORTS: '/profile/reports',
   VEHICLE_EDIT: '/profile/vehicle/edit',
   SUPPORT: '/support',
   TERMS: '/terms',
@@ -54,6 +56,20 @@ export const ROUTES = {
   CONTACT_OWNER_CHOOSE_ACTION: '/contact-owner/choose-action',
   CONTACT_OWNER_SUCCESS: '/contact-owner/success',
 } as const
+
+/** Default vehicle slug when navigating to /contact-owner without an id (e.g. legacy links). */
+export const DEFAULT_CONTACT_OWNER_SLUG = 'k7m9x2p5'
+
+/** Build contact-owner routes for a given vehicle id (unique URL per vehicle). */
+export function getContactOwnerRoutes(vehicleId: string) {
+  const base = `/contact-owner/${encodeURIComponent(vehicleId)}`
+  return {
+    base,
+    verify: `${base}/verify`,
+    chooseAction: `${base}/choose-action`,
+    success: `${base}/success`,
+  }
+}
 
 // Touch target minimum size (for accessibility)
 export const MIN_TOUCH_TARGET = 44 // pixels

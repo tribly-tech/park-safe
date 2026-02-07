@@ -3,16 +3,19 @@
 import { useState, useRef, useEffect } from 'react'
 import { ArrowLeft } from 'lucide-react'
 import Link from 'next/link'
-import { useRouter, useSearchParams } from 'next/navigation'
+import { useRouter, useSearchParams, useParams } from 'next/navigation'
 import { Suspense } from 'react'
-import { ROUTES } from '@/lib/constants'
+import { ROUTES, getContactOwnerRoutes } from '@/lib/constants'
 import { sanitizeIndianPhone, getIndianPhoneError, isValidIndianPhone } from '@/lib/phone-utils'
 import { OTPVerification } from '@/components/OTPVerification'
 import { issues, VALID_ISSUE_IDS, type IssueType } from '@/lib/contact-owner-data'
 
 function VerifyContent() {
   const router = useRouter()
+  const params = useParams()
   const searchParams = useSearchParams()
+  const vehicleId = (params?.vehicleId as string) ?? ''
+  const routes = getContactOwnerRoutes(vehicleId)
   const issueParam = searchParams.get('issue') as IssueType | null
 
   const [step, setStep] = useState<'phone' | 'otp'>('phone')
@@ -42,7 +45,7 @@ function VerifyContent() {
           Invalid or missing issue. Please select an issue first.
         </p>
         <div className="flex flex-col gap-3 w-full max-w-[280px]">
-          <Link href={ROUTES.CONTACT_OWNER}>
+          <Link href={routes.base}>
             <button className="w-full h-[54px] bg-[#1bb658] text-white font-semibold rounded-[99px] hover:bg-[#16a34a]">
               Select Issue
             </button>
@@ -93,7 +96,7 @@ function VerifyContent() {
     try {
       // Simulate OTP verification API call
       await new Promise((resolve) => setTimeout(resolve, 1500))
-      router.push(`${ROUTES.CONTACT_OWNER_CHOOSE_ACTION}?issue=${selectedIssue}`)
+      router.push(`${routes.chooseAction}?issue=${selectedIssue}`)
     } finally {
       setIsLoading(false)
       setIsVerifying(false)
@@ -160,7 +163,7 @@ function VerifyContent() {
     <div className="relative min-h-screen w-full max-w-[440px] mx-auto bg-gradient-to-b from-white via-white to-[#f1fff7] overflow-x-hidden">
       <div className="absolute left-0 top-0 w-full z-40 flex items-center p-6">
         <Link
-          href={ROUTES.CONTACT_OWNER}
+          href={routes.base}
           className="flex items-center justify-center size-11 rounded-full bg-white/80 backdrop-blur-sm border border-[#e5e7eb] hover:bg-white transition-all duration-200 active:scale-95"
         >
           <ArrowLeft className="size-5 text-[#111827]" />

@@ -378,8 +378,8 @@ export default function Home() {
                 1 durable QR tag for your vehicle
               </p>
               <div className="flex items-baseline gap-2 flex-wrap mt-1">
-                <span className="font-bold text-[18px] text-[#22c55e]">₹299</span>
-                <span className="font-normal text-[14px] text-[#9ca3af] line-through">₹399</span>
+                <span className="font-bold text-[18px] text-[#22c55e]">₹399</span>
+                <span className="font-normal text-[14px] text-[#9ca3af] line-through">₹449</span>
               </div>
               <p className="font-medium text-[12px] text-[#22c55e] mt-1">Lifetime validity</p>
               <button
@@ -408,8 +408,8 @@ export default function Home() {
                 2 QR tags · Save more
               </p>
               <div className="flex items-baseline gap-2 flex-wrap mt-1">
-                <span className="font-bold text-[18px] text-[#8b5cf6]">₹549</span>
-                <span className="font-normal text-[14px] text-[#9ca3af] line-through">₹799</span>
+                <span className="font-bold text-[18px] text-[#8b5cf6]">₹499</span>
+                <span className="font-normal text-[14px] text-[#9ca3af] line-through">₹599</span>
               </div>
               <p className="font-medium text-[12px] text-[#8b5cf6] mt-1">Lifetime validity</p>
               <button
