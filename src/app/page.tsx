@@ -450,7 +450,7 @@ export default function Home() {
                 <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Car blocking your driveway?
                 </h3>
-                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55] line-clamp-3">
                   Reach the owner instantly without confrontation.
                   Scan the Park Safe tag, choose your issue, and get in touch—no shouting or awkward notes.
                 </p>
@@ -464,7 +464,7 @@ export default function Home() {
                 <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Double-parked vehicle?
                 </h3>
-                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55] line-clamp-3">
                   Send a quick message to resolve it peacefully.
                   No need to hunt for the driver—just scan, describe the situation, and let Park Safe connect you.
                 </p>
@@ -484,7 +484,7 @@ export default function Home() {
                 <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Headlights left on?
                 </h3>
-                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55] line-clamp-3">
                   Help a stranger avoid a dead battery.
                   Scan the tag and send a quick alert so they can turn off the lights before it’s too late.
                 </p>
@@ -498,7 +498,7 @@ export default function Home() {
                 <h3 className="font-bold text-[22px] md:text-[24px] lg:text-[28px] text-black tracking-[-0.02em] leading-snug mb-3">
                   Reserved spot taken?
                 </h3>
-                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
+                <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55] line-clamp-3">
                   Reach the owner and resolve it without confrontation.
                   One scan and a short message—your spot gets freed and everyone stays calm.
                 </p>
@@ -518,8 +518,8 @@ export default function Home() {
             <h2 className="font-bold text-[22px] md:text-[26px] lg:text-[28px] text-black tracking-[-0.48px] leading-[1.3] mb-2">
               How It Works
             </h2>
-            <p className="font-normal text-[15px] md:text-[16px] text-[#64748b] max-w-[320px] mx-auto">
-              Your journey in 3 simple steps
+            <p className="font-normal text-[15px] md:text-[16px] text-[#64748b] max-w-[400px] mx-auto leading-[1.6] line-clamp-3">
+              From sign-up to your first contact—three simple steps to get you set up.
             </p>
           </div>
 
@@ -543,8 +543,8 @@ export default function Home() {
                   <h3 className="font-semibold text-[17px] md:text-[18px] text-black tracking-[-0.34px] mb-1.5">
                     Register Your Vehicle
                   </h3>
-                  <p className="font-normal text-[14px] text-[#64748b] leading-[1.5]">
-                    Add your vehicle details and get a unique QR code
+                  <p className="font-normal text-[14px] text-[#64748b] leading-[1.5] line-clamp-3">
+                    Add your vehicle once and get a unique QR code. No app needed for anyone who scans.
                   </p>
                 </div>
               </div>
@@ -563,8 +563,8 @@ export default function Home() {
                   <h3 className="font-semibold text-[17px] md:text-[18px] text-black tracking-[-0.34px] mb-1.5">
                     Place QR on Dashboard
                   </h3>
-                  <p className="font-normal text-[14px] text-[#64748b] leading-[1.5]">
-                    Print and display it where it's easily visible
+                  <p className="font-normal text-[14px] text-[#64748b] leading-[1.5] line-clamp-3">
+                    Place the tag or sticker on the dashboard so anyone can scan and reach you quickly.
                   </p>
                 </div>
               </div>
@@ -583,8 +583,8 @@ export default function Home() {
                   <h3 className="font-semibold text-[17px] md:text-[18px] text-black tracking-[-0.34px] mb-1.5">
                     Get Notified Instantly
                   </h3>
-                  <p className="font-normal text-[14px] text-[#64748b] leading-[1.5]">
-                    Receive messages or calls when someone needs to reach you
+                  <p className="font-normal text-[14px] text-[#64748b] leading-[1.5] line-clamp-3">
+                    They scan, pick an issue, and verify. You get a message or anonymous call—your number stays private.
                   </p>
                 </div>
               </div>
