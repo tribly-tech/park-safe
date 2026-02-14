@@ -452,6 +452,7 @@ export default function Home() {
                 </h3>
                 <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Reach the owner instantly without confrontation.
+                  Scan the Park Safe tag, choose your issue, and get in touch—no shouting or awkward notes.
                 </p>
               </div>
             </article>
@@ -465,6 +466,7 @@ export default function Home() {
                 </h3>
                 <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Send a quick message to resolve it peacefully.
+                  No need to hunt for the driver—just scan, describe the situation, and let Park Safe connect you.
                 </p>
               </div>
               <div className="relative aspect-[4/3] lg:aspect-[3/2] rounded-2xl overflow-hidden bg-white ring-1 ring-[#e2e8f0] order-1 lg:order-2">
@@ -484,6 +486,7 @@ export default function Home() {
                 </h3>
                 <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Help a stranger avoid a dead battery.
+                  Scan the tag and send a quick alert so they can turn off the lights before it’s too late.
                 </p>
               </div>
             </article>
@@ -497,6 +500,7 @@ export default function Home() {
                 </h3>
                 <p className="font-normal text-[16px] md:text-[17px] text-[#64748b] leading-[1.55]">
                   Reach the owner and resolve it without confrontation.
+                  One scan and a short message—your spot gets freed and everyone stays calm.
                 </p>
               </div>
               <div className="relative aspect-[4/3] lg:aspect-[3/2] rounded-2xl overflow-hidden bg-white ring-1 ring-[#e2e8f0] order-1 lg:order-2">
